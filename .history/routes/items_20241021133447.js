@@ -29,34 +29,3 @@ router.get("/:name", (req, res, next) => {
     next(e);
   }
 });
-
-//PATCH- Update an item
-router.patch("/:name", (req, res, net) => {
-  try {
-    const item = items.find((i) => i.name === req.params.name);
-    if (!item) throw new Error("Item not found");
-
-    const { name, price } = req.body;
-    if (name) item.name = name;
-    if (price) item.price = price;
-
-    return res.json({ updated: item });
-  } catch (e) {
-    next(e);
-  }
-});
-
-//DELETE- Delete an item
-router.delete("/:name", (req, res, next) => {
-  try {
-    const itemIndex = items.findIndex((i) => i.name === req.params.name);
-    if (itemIndex === -1) throw new Error("Item not found");
-
-    items.splice(itemIndex, 1);
-    return res.json({ message: "Deleted" });
-  } catch (e) {
-    next(e);
-  }
-});
-
-module.exports = router;

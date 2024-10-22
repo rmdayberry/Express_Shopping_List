@@ -1,7 +1,6 @@
 const express = require("express");
 const itemsRoutes = require("./routes/items");
 const app = express();
-const ExpressError = require("./expressError");
 
 //middleware
 app.use(express.json());
@@ -9,15 +8,15 @@ app.use("/items", itemsRoutes);
 
 //404 handle
 app.use((req, res, next) => {
-  return new ExpressError("Not Found", 404);
+  return res.status(404).json({ error: "Not Found" });
 });
 
-// Error handling general (middleware)
+// Error handling (middleware)
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-
-  return res.json({
-    error: err.message,
+  const status = err.status || 500;
+  const message = err.message || "Something went wrong";
+  return res.status(status).json({
+    error: message,
   });
 });
 

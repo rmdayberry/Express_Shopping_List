@@ -15,7 +15,7 @@ router.get("", (req, res, next) => {
 router.post("", (req, res, next) => {
   try {
     let newItem = new Item(req.body.name, req.body.price);
-    return res.status(201).json({ item: newItem });
+    return res.json({ item: newItem });
   } catch (err) {
     return next(err);
   }

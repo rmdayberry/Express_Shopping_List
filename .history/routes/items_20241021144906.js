@@ -24,6 +24,7 @@ router.post("/", (req, res, next) => {
 router.get("/:name", (req, res, next) => {
   try {
     const item = items.find((i) => i.name === req.params.name);
+    if (!item) throw new Error("Item not found");
     return res.json(item);
   } catch (e) {
     next(e);
@@ -31,14 +32,14 @@ router.get("/:name", (req, res, next) => {
 });
 
 //PATCH- Update an item
-router.patch("/:name", (req, res, net) => {
+router.patch("/:name", (req, res, next) => {
   try {
     const item = items.find((i) => i.name === req.params.name);
     if (!item) throw new Error("Item not found");
 
     const { name, price } = req.body;
     if (name) item.name = name;
-    if (price) item.price = price;
+    if (price !== undefined) item.price = price;
 
     return res.json({ updated: item });
   } catch (e) {

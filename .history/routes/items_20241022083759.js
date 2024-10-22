@@ -24,30 +24,40 @@ router.post("", (req, res, next) => {
 //GET- get a single item by name
 router.get("/:name", (req, res, next) => {
   try {
-    let foundItem = Item.find(req.params.name);
-    return res.json({ item: foundItem });
-  } catch (err) {
-    return next(err);
+    const item = items.find((i) => i.name === req.params.name);
+    if (!item) throw new Error("Item not found");
+    return res.json(item);
+  } catch (e) {
+    next(e);
   }
 });
 
 //PATCH- Update an item
 router.patch("/:name", (req, res, next) => {
   try {
-    let foundItem = Item.update(req.params.name, req.body);
-    return res.json({ item: foundItem });
-  } catch (err) {
-    return next(err);
+    const item = items.find((i) => i.name === req.params.name);
+    if (!item) throw new Error("Item not found");
+
+    const { name, price } = req.body;
+    if (name) item.name = name;
+    if (price !== undefined) item.price = price;
+
+    return res.json({ updated: item });
+  } catch (e) {
+    next(e);
   }
 });
 
 //DELETE- Delete an item
 router.delete("/:name", (req, res, next) => {
   try {
-    Item.remove(req.params.name);
+    const itemIndex = items.findIndex((i) => i.name === req.params.name);
+    if (itemIndex === -1) throw new Error("Item not found");
+
+    items.splice(itemIndex, 1);
     return res.json({ message: "Deleted" });
-  } catch (err) {
-    return next(err);
+  } catch (e) {
+    next(e);
   }
 });
 
